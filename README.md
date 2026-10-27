@@ -21,7 +21,14 @@ The Jenkinsfile runs checkout, unit tests and syntax checks, Docker image build,
 ## Docker Hub and Jenkins configuration
 
 1. Create a **public** Docker Hub repository named `campus-helpdesk` and a Docker Hub access token.
-2. Push this repository to your GitHub account.
+2. Create an empty GitHub repository named `campus-helpdesk-cicd`, then publish this local repository from PowerShell:
+
+   ```powershell
+   git remote add origin https://github.com/<your-username>/campus-helpdesk-cicd.git
+   git push -u origin main
+   ```
+
+   Replace `<your-username>` with your GitHub username. The first local commit is already present.
 3. Create an Ubuntu 24.04 EC2 instance. For a small single-node Minikube demo, select an instance with at least 2 vCPU and 4 GiB memory. Keep SSH (22) and Jenkins (8080) inbound rules restricted to your own IP address. Do not expose the Kubernetes NodePort to the public internet.
 4. Copy `scripts/bootstrap-ec2.sh` to the instance and run it. Jenkins and Minikube will run on that same host. The script uses the official Jenkins package repository and downloads Minikube/kubectl.
 5. Open `http://<EC2-public-IP>:8080` from your allowed IP, unlock Jenkins with `/var/lib/jenkins/secrets/initialAdminPassword`, install suggested plugins, and create a Pipeline job using **Pipeline script from SCM** with your GitHub repository URL and branch.
