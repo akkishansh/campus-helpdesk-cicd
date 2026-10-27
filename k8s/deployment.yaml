@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: campus-helpdesk
+  labels:
+    app: campus-helpdesk
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: campus-helpdesk
+  template:
+    metadata:
+      labels:
+        app: campus-helpdesk
+    spec:
+      containers:
+        - name: app
+          image: docker.io/DOCKERHUB_USERNAME/campus-helpdesk:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8000
+          env:
+            - name: PORT
+              value: "8000"
+            - name: DATABASE_PATH
+              value: /data/tickets.db
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          volumeMounts:
+            - name: ticket-data
+              mountPath: /data
+      volumes:
+        - name: ticket-data
+          persistentVolumeClaim:
+            claimName: campus-helpdesk-data
