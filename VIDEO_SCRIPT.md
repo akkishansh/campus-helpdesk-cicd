@@ -1,68 +1,67 @@
-# Video presentation script
+# CCA 2 video presentation script
 
-Replace bracketed personal details and only state results you have personally verified. The cues in square brackets are screen actions, not spoken words. Aim for about 5-7 minutes at a calm pace.
+About 5–7 minutes. Replace bracketed notes with your actual details. The bracketed text is what to show; do not read it aloud. Record only after the final TurfIt version has passed Jenkins and is running in Kubernetes.
 
 ## 1. Introduction
 
-“Good morning, ma’am. My name is [your name], and this is my Cloud Computing and DevOps project. I built Campus Care Helpdesk, a small campus support ticket application, and connected it to a CI/CD pipeline using GitHub, Jenkins, Docker, Docker Hub, AWS, and Minikube with Kubernetes. I’ll first show the app, then explain how a code change moves through the pipeline and gets deployed.”
+“Good morning, ma’am. I’m [name], roll number [number]. My CCA 2 project is TurfIt, a sports-ground discovery and booking application. I used GitHub, Jenkins, Docker, Docker Hub, AWS EC2, and Kubernetes through Minikube to automate the build and deployment. I’ll show the app first, then explain the pipeline and how I verified the deployment.”
 
-[Show the title slide or the app home page. Keep the project name visible.]
+[Show the TurfIt home page. Keep the browser address and project title visible.]
 
-## 2. Explain the application
+## 2. Show the application
 
-“This is the Campus Care Helpdesk dashboard. The summary cards show how many requests are in the queue, how many are open, in progress, or resolved. I can search requests and use these tabs to filter by status. Each row shows the request, category, priority, current status, and requester.”
+“TurfIt helps players find sports venues, check a venue’s details, and choose an available date and time. The booking flow collects player details and shows a demonstration checkout. This is a coursework demo, so payment is simulated and no real payment is taken.”
 
-[Show the dashboard. Point to the summary cards, search box, and status filters.]
+[Search for a venue or sport. Open a venue, show its amenities and available time slots, then show the booking and demo payment pages. Do not submit a real payment or display personal information.]
 
-“I’ll create a request now. I enter a short title, choose a category and priority, add my name and details, and submit it. The request appears in the queue, and the totals update.”
+“Players can look up their bookings. The app also has a community area. In the owner view, a venue owner can review bookings, manage turf listings, block an unavailable time, and see booking and revenue summaries.”
 
-[Click **New request**. Fill the form with a harmless demo request such as “Library Wi-Fi connection” and submit. Show the new row and updated counts.]
-
-“I can change the request status as the support team works on it. The queue also supports searching and filtering, so a user can quickly find a request. The application stores tickets in SQLite, and its health endpoint is used by the deployment checks.”
-
-[Change the ticket to **In Progress**, show the status filter, and briefly search for the ticket.]
+[Show My Bookings and Community briefly. Switch to For Owners; show Dashboard, My Turfs, Bookings, Analytics, and Schedule. Use demo records only.]
 
 ## 3. Show the source repository
 
-“The project source and deployment files are kept together in GitHub. The Python app and its tests are here. The Dockerfile describes how to package the app. The Jenkinsfile defines the automated pipeline, and the Kubernetes folder contains the Deployment, Service, and persistent volume claim manifests.”
+“The source code and deployment configuration are in this GitHub repository. The Jenkinsfile defines the pipeline. The Dockerfile explains how the app is packaged. The Kubernetes folder contains the Deployment, Service, and persistent storage claim.”
 
-[Show the GitHub repository. Point out `app.py`, `tests/`, `Dockerfile`, `Jenkinsfile`, and the `k8s/` files.]
+[Show the GitHub repository and point to `app.py`, `static/`, `tests/`, `Dockerfile`, `Jenkinsfile`, and `k8s/`.]
 
-## 4. Explain the Jenkins pipeline
+“The repository and deployment resources still use the name campus-helpdesk because I reused the working CI/CD setup while changing the application to TurfIt.”
 
-“Jenkins checks out the latest repository code. It runs the automated unit tests and a Python syntax check. If those pass, it builds the Docker image, tags it with the Jenkins build number, and pushes it to Docker Hub using a credential stored in Jenkins. The access token is not written into the source code.”
+## 4. Explain Jenkins
 
-[Show the Jenkins job and a successful build’s stage view or console output. Point to checkout, tests, Docker build, and push.]
+“When I run the Jenkins Pipeline job, Jenkins checks out the GitHub code. It runs the Python unit tests and syntax checks. If those pass, Docker builds an image and gives it a unique tag based on the build number, along with a latest tag.”
 
-“The pipeline then applies the Kubernetes manifests to Minikube, waits for the rollout, and checks the running resources. It also sends a health request to the application from inside the cluster.”
+[Show the final successful Jenkins build. Point to Checkout, Build and Test, and Build Docker Image.]
 
-[Show the deployment and verification stages in Jenkins.]
+“Jenkins then uses a stored credential to sign in to Docker Hub and push both image tags. The access token is stored in Jenkins credentials and is not written into the source code.”
 
-## 5. Show Docker Hub and Kubernetes
+[Show the Push Image stage. Keep the credential page and token out of view.]
 
-“This is the Docker Hub repository where Jenkins published the image. The build-number tag tells me which source version was built. Kubernetes uses that image in the application Deployment. The Service gives the app a stable address inside the cluster, and the persistent volume claim provides storage for the ticket database.”
+## 5. Explain deployment and verification
 
-[Show Docker Hub with the build-number tag, then show the terminal output for `kubectl get pods,deployments,services,pvc`.]
+“The pipeline applies the Kubernetes configuration to Minikube running on my EC2 machine. Kubernetes starts the new image, exposes it through a Service inside the cluster, and uses a persistent volume claim for the SQLite database. Jenkins waits for the rollout and sends a health request to the app from inside the cluster.”
 
-“For the browser demonstration, I access the app through an SSH tunnel to the EC2 host. The Minikube NodePort is not opened to the public internet.”
+[Show the Deploy to Minikube and Verify Deployment stages. Then show terminal output for `kubectl get pods,deployments,services,pvc`.]
 
-[Show the deployed app in the browser at the forwarded local address.]
+“AWS EC2 hosts Jenkins and Minikube for this project. This is a Minikube deployment on EC2, not Amazon EKS. I open the app using [your actual private access method].”
 
-## 6. Demonstrate the second deployment
+[Show the deployed TurfIt page and the matching Docker Hub numbered image tag. Do not expose the NodePort publicly.]
 
-“The assignment also asks us to prove that a source-code change flows through the pipeline. I changed [name the exact visible change], committed and pushed it to GitHub, and started the Jenkins pipeline again. Jenkins produced a new build-number image tag and deployed it to Minikube.”
+## 6. Demonstrate the final source change
 
-[Show the changed GitHub line or commit, the second Jenkins build and new image tag, then refresh the deployed app to show the change.]
+“To verify the end-to-end flow, I pushed the final TurfIt source to GitHub and ran the Jenkins job. This successful build [number] created image tag [tag], completed the Kubernetes rollout, and passed the in-cluster health check.”
 
-## 7. Close
+[Show the GitHub commit, matching Jenkins build number, Docker Hub tag, and ready Kubernetes pod. These should all refer to the same final run.]
 
-“This project demonstrates the complete automated flow: GitHub source, Jenkins build and tests, Docker image creation and publishing, and Kubernetes deployment on Minikube. I verified the running application and demonstrated a second deployment after a source-code change. Thank you.”
+## 7. Conclusion
 
-[Finish on the updated running application or the successful second Jenkins build.]
+“This project demonstrates continuous integration and deployment: source code is stored in GitHub, Jenkins checks and packages it, Docker Hub stores the versioned image, and Kubernetes deploys and verifies the application. Thank you.”
+
+[Finish on the deployed application or the successful Jenkins result.]
 
 ## Before recording
 
-- Replace your name and the exact changed feature in the script.
-- Complete the AWS/Jenkins/Docker Hub setup and the second run before describing them as completed.
-- Capture screenshots and use your real build numbers, image tags, and Kubernetes statuses.
-- Do not show passwords, access tokens, private SSH keys, or Jenkins credential values in the recording.
+- Replace name, roll number, build number, image tag, and access method with your real values.
+- First commit and push the intended final TurfIt source, then run Jenkins and confirm all stages succeed. A previous `Finished: SUCCESS` for the older source does not prove the latest local edits were deployed.
+- Capture the evidence listed in `REPORT.md`.
+- Hide passwords, access tokens, private keys, email addresses, and AWS account details.
+- If the final Jenkins run or Kubernetes status is not successful, say what is still pending instead of claiming deployment succeeded.
