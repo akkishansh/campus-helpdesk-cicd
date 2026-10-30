@@ -8,7 +8,7 @@ if [[ "$(. /etc/os-release && echo "$VERSION_ID")" != "24.04" ]]; then
 fi
 
 sudo apt-get update
-sudo apt-get install -y ca-certificates curl gnupg fontconfig openjdk-21-jre docker.io
+sudo apt-get install -y ca-certificates curl gnupg fontconfig git openjdk-21-jre docker.io
 sudo systemctl enable --now docker
 
 # Jenkins official Debian package repository.
@@ -25,6 +25,7 @@ sudo curl -fsSLo /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -fsSL 
 sudo chmod +x /usr/local/bin/kubectl
 sudo usermod -aG docker jenkins
 sudo systemctl enable --now jenkins
+sudo systemctl restart jenkins
 
 # Run Minikube as the Jenkins service user so the pipeline uses the same kubeconfig.
 sudo -u jenkins -H minikube start --driver=docker --cpus=2 --memory=3000 --force
