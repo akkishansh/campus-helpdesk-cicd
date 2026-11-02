@@ -4,7 +4,7 @@ About 5–7 minutes. Replace bracketed notes with your actual details. The brack
 
 ## 1. Introduction
 
-“Good morning, ma’am. I’m [name], roll number [number]. My CCA 2 project is TurfIt, a sports-ground discovery and booking application. I used GitHub, Jenkins, Docker, Docker Hub, AWS EC2, and Kubernetes through Minikube to automate the build and deployment. I’ll show the app first, then explain the pipeline and how I verified the deployment.”
+“Good morning, ma’am. I’m [Akshansh], roll number [number]. My CCA 2 project is TurfIt, a sports-ground discovery and booking application. I used GitHub, Jenkins, Docker, Docker Hub, AWS EC2, and Kubernetes through Minikube to automate the build and deployment. I’ll show the app first, then explain the pipeline and how I verified the deployment.”
 
 [Show the TurfIt home page. Keep the browser address and project title visible.]
 
